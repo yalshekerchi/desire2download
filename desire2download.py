@@ -47,7 +47,7 @@ class Desire2Download(object):
         self.retries = retries
         self.skip_existing = skip_existing
 
-        self.br = mechanize.Browser(factory=mechanize.RobustFactory())
+        self.br = mechanize.Browser()
         self.br.addheaders = [('User-agent', 'Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; rv:11.0) like Gecko')]
         self.br.set_handle_refresh(True)
         self.br.set_handle_redirect(True)
@@ -216,9 +216,9 @@ class Desire2Download(object):
             else:
                 extension = '.' + info.subtype
             filename = title + extension
-        except ValueError:
+        except (ValueError, urllib2.HTTPError):
             #maybe better to just return?
-            filename = title + ".pdf"
+            filename = title + ".error"
 
         for r in self.ignore_re:
             if r.match(filename) is not None:
